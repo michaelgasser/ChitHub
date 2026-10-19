@@ -27,9 +27,13 @@ func git(t *testing.T, dir string, args ...string) string {
 	t.Helper()
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
+	// Ignore the system config as well: Git for Windows sets core.autocrlf=true
+	// system-wide, which would rewrite LF fixtures to CRLF and break the
+	// byte-level assertions.
 	cmd.Env = append(os.Environ(),
 		"GIT_AUTHOR_NAME=T", "GIT_AUTHOR_EMAIL=t@t.io",
 		"GIT_COMMITTER_NAME=T", "GIT_COMMITTER_EMAIL=t@t.io",
+		"GIT_CONFIG_NOSYSTEM=1",
 		"GIT_CONFIG_GLOBAL="+filepath.Join(t.TempDir(), "gitconfig"),
 	)
 	out, err := cmd.CombinedOutput()
@@ -63,7 +67,9 @@ func initRepo(t *testing.T, root, name string) string {
 func newServer(t *testing.T, root string) *httptest.Server {
 	t.Helper()
 	home := t.TempDir()
-	t.Setenv("HOME", home) // isolate ~/.chithub.json AND the git identity used by app commits
+	t.Setenv("HOME", home)               // isolate ~/.chithub.json AND the git identity used by app commits
+	t.Setenv("USERPROFILE", home)        // Windows: os.UserHomeDir reads USERPROFILE, not HOME
+	t.Setenv("GIT_CONFIG_NOSYSTEM", "1") // keep the system core.autocrlf out of the app's git calls
 	if err := os.WriteFile(filepath.Join(home, ".gitconfig"),
 		[]byte("[user]\n\tname = ChitHub Test\n\temail = test@chithub.local\n[init]\n\tdefaultBranch = main\n"), 0o644); err != nil {
 		t.Fatal(err)
