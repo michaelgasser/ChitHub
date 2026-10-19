@@ -11,7 +11,7 @@ GitHub Desktop's everyday workflow, plus the multi-repo superpowers it never had
 One self-contained binary. No Electron.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)
 ![Go](https://img.shields.io/badge/Go-1.24-00ADD8?logo=go&logoColor=white)
 [![CI](https://github.com/Amirhat/ChitHub/actions/workflows/test.yml/badge.svg)](https://github.com/Amirhat/ChitHub/actions/workflows/test.yml)
 
@@ -88,6 +88,16 @@ brew install Amirhat/tap/chithub
 chithub
 ```
 
+### Windows — `.zip`
+
+Download `chithub_<version>_windows_amd64.zip` from the
+[latest release](https://github.com/Amirhat/ChitHub/releases), unzip it, and run
+`chithub.exe`. There is no installer; the UI opens in your default browser
+(there is no native window on Windows yet).
+
+> The binary is unsigned, so Windows SmartScreen may ask for confirmation on the
+> first launch.
+
 ## Usage
 
 Launch ChitHub and it opens in its own window. Point it at a **collection** — a
@@ -130,8 +140,8 @@ Command-line flags override the saved config:
 | `-version` | Print the version and exit |
 
 On macOS, ChitHub opens in a **native window** with its own Dock icon — closing
-the window quits the app. Pass `-browser` (or run on Linux) to open it as a
-browser window instead.
+the window quits the app. On Linux and Windows the UI opens in your default
+browser instead (pass `-browser` on macOS to do the same).
 
 ## Building from source
 
@@ -161,8 +171,8 @@ CI runs the suite on every push.
 ## Releasing
 
 Releases are cut by [GoReleaser](https://goreleaser.com) from a tag — it builds
-the macOS (universal) and Linux binaries, publishes a GitHub Release, updates the
-Homebrew tap, and attaches the `.dmg`.
+the macOS (universal), Linux and Windows binaries, publishes a GitHub Release,
+updates the Homebrew tap, and attaches the `.dmg`.
 
 ```bash
 git tag v0.1.0 && git push origin v0.1.0

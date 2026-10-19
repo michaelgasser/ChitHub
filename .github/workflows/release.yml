@@ -12,7 +12,7 @@ permissions:
 jobs:
   release:
     # macOS runner so we can also build the .app / .dmg. Pure-Go cross-compiles
-    # the Linux + Intel/ARM macOS binaries in the same job.
+    # the Linux, Windows and Intel/ARM macOS binaries in the same job.
     runs-on: macos-14
     # These are optional: set the *_CERT_* / *_NOTARY_* secrets to ship a
     # Gatekeeper-clean app. When unset, the build falls back to ad-hoc signing.

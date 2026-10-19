@@ -24,11 +24,23 @@ builds:
       - -trimpath
     ldflags:
       - -s -w -X main.version={{ .Version }}
-  # Linux needs no cgo (it falls back to the browser; see nativewin_stub.go).
+  # Linux and Windows need no cgo: they fall back to the browser
+  # (see nativewin_stub.go).
   - id: chithub-linux
     main: .
     binary: chithub
     goos: [linux]
+    goarch: [amd64, arm64]
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+  - id: chithub-windows
+    main: .
+    binary: chithub
+    goos: [windows]
     goarch: [amd64, arm64]
     env:
       - CGO_ENABLED=0
@@ -45,8 +57,11 @@ universal_binaries:
 
 archives:
   - id: chithub
-    ids: [chithub, chithub-linux]
+    ids: [chithub, chithub-linux, chithub-windows]
     name_template: "chithub_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
     files:
       - README.md
       - LICENSE
